@@ -9,7 +9,10 @@ class ControllerBase
   def initialize(req, res, route_params = { })
     @request  = req
     @response = res
-    @params   = route_params
+    @params   = Params.new(@request)
+    puts "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+    puts "This is the request: #{@request}"
+    puts "This is the request body: #{@request.body}"
   end
 
   def session
@@ -41,5 +44,7 @@ class ControllerBase
 
   def invoke_action(name)
   end
+
+
 end
 
