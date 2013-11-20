@@ -13,7 +13,9 @@ class Route
   end
 
   def run(req, res)
-    @contoller_class.new(req, res).invoke_action(@action_name)
+    /\/(?<controller>\w+)\/(?<id>\d+)/ =~ req.path # ("/users/1")
+    match_data = { controller: controller, action: self.http_method.to_s, id: id }
+    @controller_class.new(req, res, match_data).invoke_action(@action_name)
   end
 end
 
@@ -43,17 +45,18 @@ class Router
     @routes.each do |route|
       return route if route.matches?(req)
     end
+    return nil
   end
 
   def run(req, res)
-    puts "@Routes::: #{@routes}".inspect
+
     if match(req)
-      puts "match(req)::: #{match(req)}".inspect
-      puts "match(req) is a: #{match(req).class}"
-      puts "first element: #{match(req).first}"
+      puts "#{req.path}"
+      puts "match(req) => #{match(req)}"
       match(req).run(req,res)
     else
-      ControllerBase.new.render("error", "text/html")
+      res.status = 404
+      ControllerBase.new(req,res).render_content("404: Not Found", "text/html")
     end
   end
 end

@@ -2,22 +2,32 @@ require 'uri'
 
 class Params
   def initialize(req, route_params = {})
+    if route_params
+      @params = route_params
+    else
+      @params = {}
+    end
+
+    puts "ROUTE PARAMS: #{@params}"
     req_query = req.query_string
     req_body  = req.body
-    puts "This is req: #{req}"
-    puts "This is req query: #{req_query}"
-    puts "This is req body: #{req_body}"
+
+    puts "REQ: #{req}"
+    puts "REQ QUERY: #{req_query}"
+    puts "REQ BODY: #{req_body}"
+
     if req_query
-      puts "IN REQ QUERY"
-      @params = parse_www_encoded_form(req_query)
+      @params = @params.merge(parse_www_encoded_form(req_query))
+      puts "ROUTE PARAMS + QUERY: #{@params}"
     elsif req_body
-      puts "IN REQ BODY"
-      @params = parse_www_encoded_form(req_body)
+      @params = @params.merge(parse_www_encoded_form(req_body))
+      puts "ROUTE PARAMS + BODY: #{@params}"
     end
 
   end
 
   def [](key)
+    @params[key]
   end
 
   def to_s

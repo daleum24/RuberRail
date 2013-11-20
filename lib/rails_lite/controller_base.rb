@@ -3,16 +3,13 @@ require_relative 'params'
 require_relative 'session'
 
 class ControllerBase
-  attr_reader :params
+  attr_reader :params, :response
   attr_accessor :session
 
   def initialize(req, res, route_params = { })
     @request  = req
     @response = res
-    @params   = Params.new(@request)
-    puts "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-    puts "This is the request: #{@request}"
-    puts "This is the request body: #{@request.body}"
+    @params   = Params.new(@request, route_params)
   end
 
   def session
