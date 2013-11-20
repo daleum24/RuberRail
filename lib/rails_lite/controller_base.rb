@@ -43,6 +43,7 @@ class ControllerBase
   end
 
   def invoke_action(name)
+    self.send(name.to_sym)
   end
 
 
